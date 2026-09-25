@@ -243,66 +243,278 @@ def analyze_imports(file_path):
 
 SUSPICIOUS_APIS = {
 
-    "Process Injection": [
+    # ========================================================
+    # PROCESS INJECTION
+    # ========================================================
+    "Process Injection": {
+        "important": [
+            "WriteProcessMemory",
+            "CreateRemoteThread",
+            "CreateRemoteThreadEx",
+            "QueueUserAPC",
+            "SetThreadContext",
+            "NtWriteVirtualMemory",
+            "NtMapViewOfSection"
+        ],
 
-        "VirtualAllocEx",
-        "WriteProcessMemory",
-        "CreateRemoteThread",
-        "OpenProcess"
+        "supporting": [
+            "VirtualAllocEx",
+            "VirtualProtectEx",
+            "OpenProcess",
+            "GetThreadContext",
+            "NtUnmapViewOfSection"
+        ]
+    },
 
-    ],
+    # ========================================================
+    # PROCESS MANIPULATION
+    # ========================================================
+    "Process Manipulation": {
+        "important": [
+            "TerminateProcess",
+            "SuspendThread",
+            "ResumeThread",
+            "DebugActiveProcess"
+        ],
 
-    "Process Manipulation": [
+        "supporting": [
+            "OpenProcess",
+            "OpenThread",
+            "GetProcessId",
+            "GetExitCodeProcess",
+            "DebugActiveProcessStop"
+        ]
+    },
 
-        "CreateProcessA",
-        "CreateProcessW",
-        "OpenProcess",
-        "TerminateProcess"
+    # ========================================================
+    # PROCESS CREATION
+    # ========================================================
+    "Process Creation": {
+        "important": [
+            "CreateProcessAsUserA",
+            "CreateProcessAsUserW",
+            "CreateProcessWithTokenW",
+            "CreateProcessWithLogonW"
+        ],
 
-    ],
+        "supporting": [
+            "CreateProcessA",
+            "CreateProcessW"
+        ]
+    },
 
-    "Persistence": [
+    # ========================================================
+    # PERSISTENCE
+    # ========================================================
+    "Persistence": {
+        "important": [
+            "RegSetValueExA",
+            "RegSetValueExW",
+            "CreateServiceA",
+            "CreateServiceW",
+            "StartServiceA",
+            "StartServiceW"
+        ],
 
-        "RegCreateKeyExA",
-        "RegCreateKeyExW",
-        "RegSetValueExA",
-        "RegSetValueExW"
+        "supporting": [
+            "RegCreateKeyA",
+            "RegCreateKeyW",
+            "RegCreateKeyExA",
+            "RegCreateKeyExW",
+            "RegOpenKeyA",
+            "RegOpenKeyW",
+            "RegOpenKeyExA",
+            "RegOpenKeyExW",
+            "RegSetValueA",
+            "RegSetValueW",
+            "OpenSCManagerA",
+            "OpenSCManagerW"
+        ]
+    },
 
-    ],
+    # ========================================================
+    # NETWORK COMMUNICATION
+    # ========================================================
+    "Network Communication": {
+        "important": [
+            "InternetConnectA",
+            "InternetConnectW",
+            "InternetOpenUrlA",
+            "InternetOpenUrlW",
+            "HttpOpenRequestA",
+            "HttpOpenRequestW",
+            "HttpSendRequestA",
+            "HttpSendRequestW",
+            "WinHttpConnect",
+            "WinHttpOpenRequest",
+            "WinHttpSendRequest",
+            "connect",
+            "send",
+            "recv",
+            "sendto",
+            "recvfrom"
+        ],
 
-    "Network Communication": [
+        "supporting": [
+            "InternetOpenA",
+            "InternetOpenW",
+            "WinHttpOpen",
+            "WinHttpReceiveResponse",
+            "WSAStartup",
+            "socket"
+        ]
+    },
 
-        "InternetOpenA",
-        "InternetOpenW",
-        "InternetConnectA",
-        "InternetConnectW",
-        "HttpOpenRequestA",
-        "HttpOpenRequestW",
-        "WinHttpOpen",
-        "WinHttpConnect"
+    # ========================================================
+    # FILE OPERATIONS
+    # ========================================================
+    "File Operations": {
+        "important": [
+            "DeleteFileA",
+            "DeleteFileW",
+            "MoveFileA",
+            "MoveFileW",
+            "SetFileAttributesA",
+            "SetFileAttributesW"
+        ],
 
-    ],
+        "supporting": [
+            "CreateFileA",
+            "CreateFileW",
+            "ReadFile",
+            "WriteFile",
+            "CopyFileA",
+            "CopyFileW",
+            "GetFileAttributesA",
+            "GetFileAttributesW",
+            "GetTempPathA",
+            "GetTempPathW",
+            "GetTempFileNameA",
+            "GetTempFileNameW"
+        ]
+    },
 
-    "File Operations": [
+    # ========================================================
+    # COMMAND / SHELL EXECUTION
+    # ========================================================
+    "Command / Shell Execution": {
+        "important": [
+            "WinExec",
+            "ShellExecuteA",
+            "ShellExecuteW",
+            "ShellExecuteExA",
+            "ShellExecuteExW",
+            "system",
+            "_wsystem",
+            "popen",
+            "_popen",
+            "_wpopen"
+        ],
 
-        "CreateFileA",
-        "CreateFileW",
-        "WriteFile",
-        "DeleteFileA",
-        "DeleteFileW"
+        "supporting": [
+            "CreateProcessA",
+            "CreateProcessW"
+        ]
+    },
 
-    ],
+    # ========================================================
+    # KEYBOARD / INPUT CAPTURE
+    # ========================================================
+    "Keyboard Input Capture": {
+        "important": [
+            "GetAsyncKeyState",
+            "GetKeyState",
+            "GetKeyboardState",
+            "GetRawInputData",
+            "GetRawInputBuffer",
+            "RegisterRawInputDevices"
+        ],
 
-    "Command Execution": [
+        "supporting": [
+            "GetKeyboardLayout",
+            "GetKeyboardLayoutList",
+            "GetKeyNameTextA",
+            "GetKeyNameTextW",
+            "GetRawInputDeviceInfoA",
+            "GetRawInputDeviceInfoW",
+            "GetRawInputDeviceList"
+        ]
+    },
 
-        "WinExec",
-        "ShellExecuteA",
-        "ShellExecuteW",
-        "CreateProcessA",
-        "CreateProcessW"
+    # ========================================================
+    # CREDENTIAL / TOKEN ACCESS
+    # ========================================================
+    "Credential / Token Access": {
+        "important": [
+            "DuplicateTokenEx",
+            "AdjustTokenPrivileges",
+            "ImpersonateLoggedOnUser",
+            "ImpersonateToken",
+            "LogonUserA",
+            "LogonUserW"
+        ],
 
-    ]
+        "supporting": [
+            "OpenProcessToken",
+            "OpenThreadToken",
+            "GetTokenInformation",
+            "DuplicateToken",
+            "LookupPrivilegeValueA",
+            "LookupPrivilegeValueW",
+            "RevertToSelf"
+        ]
+    },
 
+    # ========================================================
+    # SYSTEM INFORMATION
+    # ========================================================
+    "System Information": {
+        "important": [],
+
+        "supporting": [
+            "GetComputerNameA",
+            "GetComputerNameW",
+            "GetUserNameA",
+            "GetUserNameW",
+            "GetVersionExA",
+            "GetVersionExW",
+            "GetSystemInfo",
+            "GetNativeSystemInfo",
+            "GlobalMemoryStatusEx",
+            "GetPhysicallyInstalledSystemMemory",
+            "GetLogicalDrives",
+            "GetLogicalDriveStringsA",
+            "GetLogicalDriveStringsW",
+            "GetDiskFreeSpaceA",
+            "GetDiskFreeSpaceW",
+            "GetDiskFreeSpaceExA",
+            "GetDiskFreeSpaceExW",
+            "GetAdaptersInfo",
+            "GetAdaptersAddresses",
+            "GetCurrentProcessId",
+            "GetCurrentThreadId"
+        ]
+    },
+
+    # ========================================================
+    # SECURITY / DEBUGGING
+    # ========================================================
+    "Security / Debugging": {
+        "important": [
+            "IsDebuggerPresent",
+            "CheckRemoteDebuggerPresent",
+            "DebugActiveProcess"
+        ],
+
+        "supporting": [
+            "OutputDebugStringA",
+            "OutputDebugStringW",
+            "DebugActiveProcessStop",
+            "CheckTokenMembership",
+            "GetSecurityInfo",
+            "SetSecurityInfo"
+        ]
+    }
 }
 
 
@@ -328,7 +540,7 @@ def detect_suspicious_apis(import_info):
             )
 
 
-    for category, api_list in SUSPICIOUS_APIS.items():
+    for category, importance, api_list in SUSPICIOUS_APIS.items():
 
         matches = []
 
@@ -345,7 +557,7 @@ def detect_suspicious_apis(import_info):
             findings.append({
 
                 "category": category,
-
+                "importance": importance,
                 "apis": matches
 
             })
@@ -602,7 +814,46 @@ def calculate_risk_score(
     iocs,
     yara_findings=None
 ):
+    IMPORTANT_POINTS = {
+        "Process Injection": 15,
+        "Process Manipulation": 3,
+        "Process Creation": 3,
+        "Persistence": 10,
+        "Network Communication": 3,
+        "File Operations": 1,
+        "Command / Shell Execution": 5,
+        "Keyboard Input Capture": 8,
+        "Credential / Token Access": 8,
+        "System Information": 0,
+        "Security / Debugging": 3
+    }
 
+    SUPPORTING_POINTS = {
+        "Process Injection": 5,
+        "Process Manipulation": 1,
+        "Process Creation": 1,
+        "Persistence": 3,
+        "Network Communication": 1,
+        "File Operations": 0,
+        "Command / Shell Execution": 1,
+        "Keyboard Input Capture": 2,
+        "Credential / Token Access": 2,
+        "System Information": 0,
+        "Security / Debugging": 1
+    }
+    SEVERITY = {
+        "Process Injection": "CRITICAL",
+        "Process Manipulation": "LOW",
+        "Process Creation": "LOW",
+        "Persistence": "HIGH",
+        "Network Communication": "LOW",
+        "File Operations": "VERY LOW",
+        "Command / Shell Execution": "MEDIUM",
+        "Keyboard Input Capture": "HIGH",
+        "Credential / Token Access": "HIGH",
+        "System Information": "INFO",
+        "Security / Debugging": "LOW"
+    }
     score = 0
 
     indicators = []
@@ -615,85 +866,40 @@ def calculate_risk_score(
     for finding in suspicious_api_findings:
 
         category = finding["category"]
-
+        importance = finding["severity"]
         apis = finding["apis"]
 
-
-        if category == "Process Injection":
-
-            points = 30
-            severity = "CRITICAL"
-
-
-        elif category == "Persistence":
-
-            points = 20
-            severity = "HIGH"
-
-
-        elif category == "Command Execution":
-
-            points = 20
-            severity = "HIGH"
-
-
-        elif category == "Network Communication":
-
-            points = 15
-            severity = "HIGH"
-
-
-        elif category == "Process Manipulation":
-
-            points = 15
-            severity = "HIGH"
-
-
-        elif category == "File Operations":
-
-            points = 5
-            severity = "MEDIUM"
-
-
+        if importance == "important":
+            points = IMPORTANT_POINTS.get(category, 0)
         else:
+            points = SUPPORTING_POINTS.get(category, 0)
 
-            points = 5
-            severity = "LOW"
+            severity = SEVERITY.get(category, "INFO")
 
+            score += points
 
-        score += points
-
-
-        indicators.append({
-
-            "severity": severity,
-
-            "points": points,
-
-            "message": (
-                f"{category}: "
-                f"{', '.join(apis)}"
-            )
-
-        })
+            indicators.append({
+                "severity": severity,
+                "importance": importance,
+                "points": points,
+                "message": f"{category}: {', '.join(apis)}"
+            })
 
 
     # ========================================================
     # ENTROPY
     # ========================================================
-
+    entropy_points = 0
     for finding in entropy_findings:
 
         if finding["severity"] == "HIGH":
-
-            points = 20
+            points = 5
+            entropy_points += points
 
         else:
+            points = 3
+            entropy_points += points
 
-            points = 10
-
-
-        score += points
 
 
         indicators.append({
@@ -705,7 +911,7 @@ def calculate_risk_score(
             "message": finding["message"]
 
         })
-
+    score += min(entropy_points, 10)
 
     # ========================================================
     # URLS
@@ -714,8 +920,8 @@ def calculate_risk_score(
     if iocs.get("urls"):
 
         points = min(
-            len(iocs["urls"]) * 5,
-            20
+            len(iocs["urls"]),
+            5
         )
 
 
@@ -743,8 +949,8 @@ def calculate_risk_score(
     if iocs.get("ip_addresses"):
 
         points = min(
-            len(iocs["ip_addresses"]) * 5,
-            20
+            len(iocs["ip_addresses"]),
+            5
         )
 
 
@@ -771,7 +977,7 @@ def calculate_risk_score(
 
     if iocs.get("powershell"):
 
-        points = 15
+        points = 4
 
 
         score += points
@@ -779,7 +985,7 @@ def calculate_risk_score(
 
         indicators.append({
 
-            "severity": "HIGH",
+            "severity": "LOW",
 
             "points": points,
 
@@ -795,7 +1001,7 @@ def calculate_risk_score(
 
     if iocs.get("commands"):
 
-        points = 10
+        points = 2
 
 
         score += points
@@ -803,7 +1009,7 @@ def calculate_risk_score(
 
         indicators.append({
 
-            "severity": "MEDIUM",
+            "severity": "LOW",
 
             "points": points,
 
@@ -833,31 +1039,29 @@ def calculate_risk_score(
 
             if severity == "CRITICAL":
 
-                points = 30
+                points = 15
 
 
             elif severity == "HIGH":
 
-                points = 20
+                points = 10
 
 
             elif severity == "MEDIUM":
 
-                points = 10
+                points = 5
 
 
             elif severity == "LOW":
 
-                points = 5
+                points = 2
 
 
             else:
 
-                points = 5
-
+                points = 2
 
             score += points
-
 
             # -----------------------------------------------
             # YARA INDICATOR

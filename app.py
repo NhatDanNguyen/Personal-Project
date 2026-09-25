@@ -419,20 +419,20 @@ def analysis_worker(
             "#2563eb"
         )
 
-        existing_analysis = find_by_sha256(
-            sha256
-        )
+        # existing_analysis = find_by_sha256(
+        #     sha256
+        # )
 
 
-        if existing_analysis:
+        # if existing_analysis:
 
-            window.after(
-                0,
-                show_duplicate,
-                existing_analysis
-            )
+        #     window.after(
+        #         0,
+        #         show_duplicate,
+        #         existing_analysis
+        #     )
 
-            return
+        #     return
 
 
         # ----------------------------------------------------
